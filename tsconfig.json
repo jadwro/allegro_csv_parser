@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es6",                // Język docelowy JavaScript
+    "module": "es6",                // Typ modułów
+    "strict": true,                 // Włącz rygorystyczny tryb TypeScript
+    "esModuleInterop": true,        // Obsługa importowania bibliotek CommonJS
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",             // Folder wyjściowy z wygenerowanym JavaScriptem
+    "rootDir": "./src"              // Główna lokalizacja plików TypeScript
+  },
+  "include": ["src/*.ts", "src/index.ts"],       // Pliki do kompilacji
+  "exclude": ["node_modules"]       // Pliki i foldery wykluczone z kompilacji
+}

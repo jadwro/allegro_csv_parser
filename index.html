@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSV Parser</title>
+  <!-- Tailwind CSS CDN -->
+  <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/dist/output.css">
+</head>
+<body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col items-center">
+
+  <h1 class="text-2xl font-bold my-8">Dodaj CSV z zamówieniami</h1>
+  
+    <div class="flex items-center space-x-4">
+      <input type="file" id="uploadCsvFile" accept=".csv" class="p-2 border rounded shadow-sm" />
+      <button id="uploadButton" class="px-4 py-2 bg-green-500 text-white font-semibold rounded shadow-md hover:bg-green-600 focus:outline-none">Generuj tabelę</button>
+    </div>
+
+
+    <div class="flex space-x-4 mt-6">
+      <button id="copyContentButton" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 focus:outline-none" style="display: none;">
+          Kopiuj zawartość
+      </button>
+  </div>
+  
+  </div>
+
+  <table id="dataTable" class="mt-8 w-full max-w-4xl bg-white shadow-md rounded overflow-hidden">
+  </table>
+
+  <script src="src/index.ts" type="module"></script> 
+</body>
+</html>
