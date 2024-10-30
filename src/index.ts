@@ -1,5 +1,6 @@
 import { DataDisplay } from './DataDisplay';
 import { FileHandler } from './FileHandler';
+import './styles/tailwind.css';
 
 const uploadInput = document.getElementById('uploadCsvFile') as HTMLInputElement;
 const uploadButton = document.getElementById('uploadButton') as HTMLButtonElement;
