@@ -1,4 +1,4 @@
-export type ProductTypeCSV = {
+export type AllegroProductTypeCSV = {
   Type: string;
   OrderId: string;
   LineItemId: string;

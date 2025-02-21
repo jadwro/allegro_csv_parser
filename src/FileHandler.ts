@@ -1,40 +1,36 @@
-import OrderCSVHandler from "./OrderCSVHandler";
-import ProductCSVHandler from "./ProductCSVHandler";
-import { OrderType } from "./types/OrderType";
-import { ProductType } from "./types/ProductType";
+import { ParsedData } from './types/ParsedData';
+import { AllegroFileHandler } from './Allegro/AllegroFileHandlers';
+import { EmpikFileHandler } from './Empik/EmpikFileHandler';
+import { SalePlatform } from './types/SalePlatform';
 
 export class FileHandler {
-  private parsedData: {
-    orders: OrderType[];
-    products: ProductType[];
-  } | undefined;
+  private parsedData: ParsedData;
 
-  constructor(private file: File) {
-    this.file = file;
+  constructor(private file: File, private salePlatform: SalePlatform) {
   }
 
-  getParsedData() {
+  async getParsedData() {
+    await this.uploadAndProcessFile(this.salePlatform);
+
     if(this.parsedData === undefined) {
       throw new Error('Orders or products are undefined!');
     }
+    
     return this.parsedData;
   }
 
-  async uploadAndProcessFile() {
+  private async uploadAndProcessFile(salePlatform: SalePlatform) {
     const fileContent = await this.file.text();
-    const tables = fileContent.split(/\n\s*\n/);
-    const ordersTable = tables[0];
-    const productsTable = tables[1];
-
-    const ordersHandler = new OrderCSVHandler();    
-    await ordersHandler.parseOrderCSV(ordersTable);
-
-    const productsHandler = new ProductCSVHandler();
-    await productsHandler.parseProductCSV(productsTable); 
     
-    this.parsedData = {
-      orders: ordersHandler.getOrders(),
-      products: productsHandler.getProducts()
+    switch(salePlatform){
+      case SalePlatform.ALLEGRO:
+        this.parsedData = await new AllegroFileHandler(fileContent).processFile();
+        break;
+      case SalePlatform.EMPIK:
+        this.parsedData = await new EmpikFileHandler(fileContent).processFile();
+        break;
+      default:
+        throw Error(`***** ${salePlatform} sale platform doesn't exist! *****`);
     }
   }
 }

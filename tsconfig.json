@@ -9,6 +9,6 @@
     "outDir": "./dist",             // Folder wyjściowy z wygenerowanym JavaScriptem
     "rootDir": "./src"              // Główna lokalizacja plików TypeScript
   },
-  "include": ["src/*.ts", "src/index.ts"],       // Pliki do kompilacji
+  "include": ["src/*.ts", "src/index.ts", "src/Allegro/AllegroDataTableHandler.ts", "src/Allegro/AllegroOrderCSVHandler.ts", "src/Allegro/AllegroProductCSVHandler.ts"],       // Pliki do kompilacji
   "exclude": ["node_modules"]       // Pliki i foldery wykluczone z kompilacji
 }

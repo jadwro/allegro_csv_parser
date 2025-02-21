@@ -1,13 +1,13 @@
-import { OrderType } from "./types/OrderType";
-import { ProductType } from "./types/ProductType";
-import { DataTableType } from './types/DataTableType';
-import { VAT_RATE } from "./Consts";
-import { SalePlatform } from "./types/SalePlatform";
+import { OrderType } from "../types/OrderType";
+import { ProductType } from "../types/ProductType";
+import { DataTableType } from '../types/DataTableType';
+import { VAT_RATE } from "../Consts";
+import { SalePlatform } from "../types/SalePlatform";
 
-export class DataTableHandler {  
+export class AllegroDataTableHandler {  
   private dataTable: DataTableType[] = [];
   
-  constructor(private orders: OrderType[], private products: ProductType[]) {
+  constructor(private suffix: string, private orders: OrderType[], private products: ProductType[]) {
     this.orders = orders;
     this.products = products;
   }
@@ -17,10 +17,10 @@ export class DataTableHandler {
   }
 
   matchItemsWithOrders() {
-    this.dataTable = this.orders
+    return this.orders
       .filter(order => !order.invoiceIssued)
       .reverse()
-      .map((order, index) => {
+      .map((order, index) => {        
         const productsBeforeReturns = this.products.filter(product => product.orderId === order.orderId);
         const shippingCost = this.calculateShipping(order, productsBeforeReturns);
 
@@ -43,7 +43,8 @@ export class DataTableHandler {
     });
   }
 
-  private formatDate(date: Date): string {
+  private formatDate(stringDate: string): string {
+    const date = new Date(stringDate);
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
@@ -53,11 +54,7 @@ export class DataTableHandler {
   
 
   private generateId(index: number) {
-    const now = new Date();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = String(now.getFullYear()).slice(-2);
-
-    return `${index}_al/${month}/${year}`;
+    return `${index}_al/${this.suffix}`;
   }
 
   private handleReturns(products: ProductType[]) {

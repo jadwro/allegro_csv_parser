@@ -1,15 +1,41 @@
-import { DataTable } from "./DataTable";
-import { DataTableHandler } from "./DataTableHandler";
-import { OrderType } from "./types/OrderType";
-import { ProductType } from "./types/ProductType";
+import { DataTableType } from "./types/DataTableType";
 
-export class DataDisplay {
-  displayTable(tableElement: HTMLTableElement, orders: OrderType[], products: ProductType[]) {
-    const data = new DataTableHandler(orders, products);
-    data.matchItemsWithOrders();
+export class DataDisplay {  
+  buildTable(dataTableElement: HTMLTableElement, data: DataTableType[]) {
+    dataTableElement.innerHTML = '';
     
-    const dataTable = new DataTable(data.getData());
-    dataTable.buildTable(tableElement);
+    if (data.length === 0) return;
+  
+    const headers = Object.keys(data[0]);
+    const headerRow = dataTableElement.insertRow();
+
+    const lpHeader = document.createElement('th');
+    lpHeader.style.fontWeight = 'bold';
+    lpHeader.classList.add('border', 'border-gray-300', 'px-4', 'py-2', 'bg-gray-100');
+    lpHeader.textContent = "Lp.";
+    headerRow.appendChild(lpHeader);
+
+    headers.forEach(header => {
+      const th = document.createElement('th');
+      th.style.fontWeight = 'bold';
+      th.classList.add('border', 'border-gray-300', 'px-4', 'py-2', 'bg-gray-100');
+      th.textContent = header.charAt(0).toUpperCase() + header.slice(1);
+      headerRow.appendChild(th);
+    }); 
+    
+    data.forEach((row, i) => {
+      const dataRow = dataTableElement.insertRow();
+
+      const lpCell = dataRow.insertCell();
+      lpCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+      lpCell.textContent = (i + 1).toString();
+
+      headers.forEach(header => {
+        const cell = dataRow.insertCell();
+        cell.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+        cell.textContent = row[header as keyof DataTableType] || '';
+      });
+    });
   }
 
   copyContent(tableElement: HTMLTableElement) {

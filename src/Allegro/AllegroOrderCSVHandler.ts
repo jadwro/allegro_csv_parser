@@ -1,9 +1,9 @@
 import Papa from "papaparse";
-import { OrderStatus } from "./types/OrderStatus";
-import { OrderType } from "./types/OrderType";
-import { OrderTypeCSV } from "./types/OrderTypeCSV";
+import { AllegroOrderStatus } from "./types/AllegroOrderStatus";
+import { OrderType } from "../types/OrderType";
+import { AllegroOrderTypeCSV } from "./types/AllegroOrderTypeCSV";
 
-export default class OrderCSVHandler {
+export default class AllegroOrderCSVHandler {
   private orders: OrderType[] = [];
 
   getOrders() {
@@ -16,10 +16,9 @@ export default class OrderCSVHandler {
         header: true,
         skipEmptyLines: true,
         complete: (results: any) => {
-          const data = results.data as OrderTypeCSV[];
+          const data = results.data as AllegroOrderTypeCSV[];
           
           const parsedOrders = data.map(this.mapOrderCSV).filter(Boolean) as OrderType[];
-          console.log(parsedOrders)
           resolve(parsedOrders);
         },
         error: (error: any) => reject(error),
@@ -27,14 +26,17 @@ export default class OrderCSVHandler {
     });
   }
 
-  private mapOrderCSV(data: OrderTypeCSV): OrderType | null {
-    if(data.SellerStatus === OrderStatus.CANCELLED) {
+  private mapOrderCSV(data: AllegroOrderTypeCSV): OrderType | null {
+    if(data.SellerStatus === AllegroOrderStatus.CANCELLED) {
+      return null;
+    }
+    if(data.Marketplace !== 'allegro-pl') {
       return null;
     }
     
     return {
       orderId: data.OrderId,
-      orderDate: new Date(data.OrderDate),
+      orderDate: data.OrderDate,
       buyerData: {
         buyerName: data.BuyerName,
         buyerAddress: {

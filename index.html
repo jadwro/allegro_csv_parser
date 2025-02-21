@@ -4,31 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CSV Parser</title>
-  <!-- Tailwind CSS CDN -->
-  <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
-  <!-- <link rel="stylesheet" href="/dist/output.css"> -->
+  <link rel="stylesheet" href="/dist/output.css">
 </head>
 <body class="bg-gray-100 text-gray-900 font-sans min-h-screen flex flex-col items-center">
 
   <h1 class="text-2xl font-bold my-8">Dodaj CSV z zamówieniami</h1>
-  
-    <div class="flex items-center space-x-4">
-      <input type="file" id="uploadCsvFile" accept=".csv" class="p-2 border rounded shadow-sm" />
-      <button id="uploadButton" class="px-4 py-2 bg-green-500 text-white font-semibold rounded shadow-md hover:bg-green-600 focus:outline-none">Generuj tabelę</button>
-    </div>
 
-
-    <div class="flex space-x-4 mt-6">
-      <button id="copyContentButton" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 focus:outline-none" style="display: none;">
-          Kopiuj zawartość
-      </button>
+  <div class="mb-4 flex items-center space-x-2">
+    <label for="monthSelect" class="text-sm font-medium text-gray-700">Miesiąc</label>
+    <select id="monthSelect" class="p-2 border rounded shadow-sm">
+      <option value="01">Styczeń</option>
+      <option value="02">Luty</option>
+      <option value="03">Marzec</option>
+      <option value="04">Kwiecień</option>
+      <option value="05">Maj</option>
+      <option value="06">Czerwiec</option>
+      <option value="07">Lipiec</option>
+      <option value="08">Sierpień</option>
+      <option value="09">Wrzesień</option>
+      <option value="10">Październik</option>
+      <option value="11">Listopad</option>
+      <option value="12">Grudzień</option>
+    </select>
+    <label for="monthSelect" class="text-sm font-medium text-gray-700">Rok</label>
+    <input type="text" id="year" class="p-2 border rounded shadow-sm">
   </div>
   
+  <div class="flex items-center space-x-4">
+    <label for="uploadCsvFileAllegro" class="text-lg font-semibold text-gray-700">
+      Plik zestawienia Allegro:
+    </label>
+    <input type="file" id="uploadCsvFileAllegro" accept=".csv" class="p-2 border rounded shadow-sm" />
   </div>
+  
+  <div class="flex items-center space-x-4 mt-4">
+    <label for="uploadCsvFileEmpik" class="text-lg font-semibold text-gray-700">
+      Plik zestawienia Empik:
+    </label>
+    <input type="file" id="uploadCsvFileEmpik" accept=".csv" class="p-2 border rounded shadow-sm" />
+  </div>
+  
 
+  <div class="flex space-x-4 mt-6">
+    <button id="generateButton" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 focus:outline-none">
+      Generuj
+    </button>
+  </div>
+  
+  <div class="flex space-x-4 mt-6">
+    <button id="copyContentButton" class="px-4 py-2 bg-blue-500 text-white font-semibold rounded shadow-md hover:bg-blue-600 focus:outline-none" style="display: none;">
+      Kopiuj zawartość
+    </button>
+  </div>
+  
   <table id="dataTable" class="mt-8 w-full max-w-4xl bg-white shadow-md rounded overflow-hidden">
   </table>
 
   <script src="src/index.ts" type="module"></script> 
+
+  <script>
+    const currentMonthName = new Date().toLocaleString('pl-PL', { month: 'long' });
+    document.addEventListener('DOMContentLoaded', function() {
+      const monthSelect = document.getElementById('monthSelect');
+      const yearInput = document.getElementById('year');
+      const currentMonth = String(new Date().getMonth() + 1).padStart(2, '0');
+      const currentYear = new Date().getFullYear();
+      monthSelect.value = currentMonth;
+      yearInput.value = currentYear;
+    });
+  </script>
 </body>
 </html>

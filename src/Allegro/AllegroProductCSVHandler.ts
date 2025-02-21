@@ -1,8 +1,8 @@
 import Papa from "papaparse";
-import { ProductTypeCSV } from './types/ProductTypeCSV';
-import { ProductType } from './types/ProductType';
+import { AllegroProductTypeCSV } from './types/AllegroProductTypeCSV';
+import { ProductType } from '../types/ProductType';
 
-export default class ProductCSVHandler {
+export default class AllegroProductCSVHandler {
   private products: ProductType[] = [];
 
   getProducts() {
@@ -15,7 +15,7 @@ export default class ProductCSVHandler {
         header: true,
         skipEmptyLines: true,
         complete: (results: any) => {
-          const data = results.data as ProductTypeCSV[];
+          const data = results.data as AllegroProductTypeCSV[];
           
           const parsedProducts = data.map(this.mapProductCSV).filter(Boolean) as ProductType[];
 
@@ -26,7 +26,7 @@ export default class ProductCSVHandler {
     });
   }
 
-  private mapProductCSV(data: ProductTypeCSV): ProductType | null {    
+  private mapProductCSV(data: AllegroProductTypeCSV): ProductType | null {    
     return {
       orderId: data.OrderId,
       productName: data.Name,

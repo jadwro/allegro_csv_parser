@@ -12,4 +12,4 @@ export type DataTableType = {
   vatRate: string,
   transactionId: string,
   platform: SalePlatform
-}
+};

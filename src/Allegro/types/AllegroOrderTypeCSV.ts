@@ -1,10 +1,10 @@
-import { OrderStatus } from "./OrderStatus";
+import { AllegroOrderStatus } from "./AllegroOrderStatus";
 
-export type OrderTypeCSV = {
+export type AllegroOrderTypeCSV = {
   Type: string;
   OrderId: string;
   OrderDate: string;
-  SellerStatus: OrderStatus;
+  SellerStatus: AllegroOrderStatus;
   BuyerId: string;
   BuyerLogin: string;
   BuyerEmail: string;
@@ -22,4 +22,5 @@ export type OrderTypeCSV = {
   PaymentCurrency: string;
   TotalToPayAmount: string;
   InvoiceTaxId: string;
+  Marketplace: string;
 };

@@ -1,9 +1,10 @@
 export type OrderType = {
   orderId: string,
-  orderDate: Date,
+  orderDate: string,
   buyerData: BuyerData,
   paymentData: PaymentData,
-  invoiceIssued: boolean
+  invoiceIssued: boolean,
+  shippingCost?: string
 }
 
 type BuyerData = {

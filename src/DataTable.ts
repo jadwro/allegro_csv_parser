@@ -10,7 +10,6 @@ export class DataTable {
     
     if (this.data.length === 0) return;
   
-    // Dodaj nagłówki z klasami Tailwind
     const headers = Object.keys(this.data[0]);
     const headerRow = dataTableElement.insertRow();
     headers.forEach(header => {
@@ -21,7 +20,6 @@ export class DataTable {
       headerRow.appendChild(th);
     }); 
     
-    // Dodaj wiersze z danymi
     this.data.forEach(row => {
       const dataRow = dataTableElement.insertRow();
       headers.forEach(header => {
