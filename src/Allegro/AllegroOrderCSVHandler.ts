@@ -30,9 +30,9 @@ export default class AllegroOrderCSVHandler {
     if(data.SellerStatus === AllegroOrderStatus.CANCELLED) {
       return null;
     }
-    if(data.Marketplace !== 'allegro-pl') {
-      return null;
-    }
+    // if(data.Marketplace !== 'allegro-pl') {
+    //   return null;
+    // }
     
     return {
       orderId: data.OrderId,
