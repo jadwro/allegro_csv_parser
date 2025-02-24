@@ -4,14 +4,8 @@ import { OrderType } from "../types/OrderType";
 import { AllegroOrderTypeCSV } from "./types/AllegroOrderTypeCSV";
 
 export default class AllegroOrderCSVHandler {
-  private orders: OrderType[] = [];
-
-  getOrders() {
-    return this.orders ?? (() => { throw Error("NO ORDERS FOUND"); })();
-  }
-
-  async parseOrderCSV(data: string) {
-    this.orders = await new Promise((resolve, reject) => {
+  async parseOrderCSV(data: string): Promise<OrderType[]> {
+    return await new Promise((resolve, reject) => {
       Papa.parse(data, {
         header: true,
         skipEmptyLines: true,
@@ -30,9 +24,6 @@ export default class AllegroOrderCSVHandler {
     if(data.SellerStatus === AllegroOrderStatus.CANCELLED) {
       return null;
     }
-    // if(data.Marketplace !== 'allegro-pl') {
-    //   return null;
-    // }
     
     return {
       orderId: data.OrderId,

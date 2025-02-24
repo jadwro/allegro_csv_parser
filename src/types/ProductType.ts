@@ -3,5 +3,6 @@ export type ProductType = {
   productName: string,
   quantity: number,
   price: number,
-  returnsQuantity: number
+  returnsQuantity: number,
+  currency?: string,
 }

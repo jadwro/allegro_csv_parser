@@ -3,6 +3,7 @@ import { ProductType } from "../types/ProductType";
 import { DataTableType } from '../types/DataTableType';
 import { VAT_RATE } from "../Consts";
 import { SalePlatform } from "../types/SalePlatform";
+import CurrencyHandler from "../CurrencyHandler";
 
 export class AllegroDataTableHandler {  
   private dataTable: DataTableType[] = [];
@@ -16,12 +17,20 @@ export class AllegroDataTableHandler {
     return this.dataTable;
   }
 
-  matchItemsWithOrders() {
-    return this.orders
+  async matchItemsWithOrders() {
+    const currencyHandler = new CurrencyHandler();
+    this.orders = await Promise.all(
+  this.orders.map(order => currencyHandler.calculateOrderPrice(order))
+    );
+
+    return await Promise.all(this.orders
       .filter(order => !order.invoiceIssued)
       .reverse()
-      .map((order, index) => {        
-        const productsBeforeReturns = this.products.filter(product => product.orderId === order.orderId);
+      .map(async (order, index) => {        
+        const productsBeforeReturns = await Promise.all(
+          this.products.filter(product => product.orderId === order.orderId)
+            .map(product => currencyHandler.calculateProductPrice(product, order))
+        );
         const shippingCost = this.calculateShipping(order, productsBeforeReturns);
 
         const productsAfterReturns = this.handleReturns(productsBeforeReturns.map(product => ({ ...product })));
@@ -40,7 +49,7 @@ export class AllegroDataTableHandler {
           transactionId: order.paymentData.paymentId,
           platform: SalePlatform.ALLEGRO
         }
-    });
+    }));
   }
 
   private formatDate(stringDate: string): string {

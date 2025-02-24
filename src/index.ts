@@ -46,7 +46,7 @@ async function processAllegroFile(suffix: string): Promise<DataTableType[] | und
   const data = await fileHandlerAllegro.getParsedData();
   
   const dataTableAllegro = new AllegroDataTableHandler(suffix, data.orders, data.products);
-  return dataTableAllegro.matchItemsWithOrders();
+  return await dataTableAllegro.matchItemsWithOrders();
 }
 
 async function processEmpikFile(suffix: string): Promise<DataTableType[] | undefined> {

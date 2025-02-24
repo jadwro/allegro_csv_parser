@@ -3,14 +3,8 @@ import { AllegroProductTypeCSV } from './types/AllegroProductTypeCSV';
 import { ProductType } from '../types/ProductType';
 
 export default class AllegroProductCSVHandler {
-  private products: ProductType[] = [];
-
-  getProducts() {
-    return this.products ?? (() => { throw Error("NO PRODUCTS FOUND"); })();
-  }
-  
-  async parseProductCSV(data: string) {
-    this.products = await new Promise((resolve, reject) => {
+  async parseProductCSV(data: string): Promise<ProductType[]> {
+    return await new Promise((resolve, reject) => {
       Papa.parse(data, {
         header: true,
         skipEmptyLines: true,
@@ -32,7 +26,8 @@ export default class AllegroProductCSVHandler {
       productName: data.Name,
       quantity: +data.Quantity,
       price: +data.Price,
-      returnsQuantity: +data.ReturnsQuantity
+      returnsQuantity: +data.ReturnsQuantity,
+      currency: data.Currency
     }
   }
 }

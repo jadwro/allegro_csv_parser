@@ -3,6 +3,7 @@
     "target": "es6",                // Język docelowy JavaScript
     "module": "es6",                // Typ modułów
     "strict": true,                 // Włącz rygorystyczny tryb TypeScript
+    "moduleResolution": "node",
     "esModuleInterop": true,        // Obsługa importowania bibliotek CommonJS
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,

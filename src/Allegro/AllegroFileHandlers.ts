@@ -11,14 +11,14 @@ export class AllegroFileHandler {
     const productsTable = tables[1];
 
     const ordersHandler = new AllegroOrderCSVHandler();    
-    await ordersHandler.parseOrderCSV(ordersTable);
+    const orders = (await ordersHandler.parseOrderCSV(ordersTable));
 
     const productsHandler = new AllegroProductCSVHandler();
-    await productsHandler.parseProductCSV(productsTable); 
+    const products = await productsHandler.parseProductCSV(productsTable); 
     
     return {
-      orders: ordersHandler.getOrders(),
-      products: productsHandler.getProducts()
+      orders: orders,
+      products: products
     }
   }
 }
