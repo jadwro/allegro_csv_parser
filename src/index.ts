@@ -1,6 +1,7 @@
 import { AllegroDataTableHandler } from './Allegro/AllegroDataTableHandler';
 import { DataDisplay } from './DataDisplay';
 import { EmpikDataTableHandler } from './Empik/EmpikDataTableHandler';
+import { ShopifyDataTableHandler } from './Shopify/ShopifyDataTableHandler';
 import { FileHandler } from './FileHandler';
 import './styles/tailwind.css';
 import { DataTableType } from './types/DataTableType';
@@ -8,6 +9,7 @@ import { SalePlatform } from './types/SalePlatform';
 
 const uploadInputAllegro = document.getElementById('uploadCsvFileAllegro') as HTMLInputElement;
 const uploadInputEmpik = document.getElementById('uploadCsvFileEmpik') as HTMLInputElement;
+const uploadInputShopify = document.getElementById('uploadCsvFileShopify') as HTMLInputElement;
 
 const generateButton = document.getElementById('generateButton') as HTMLButtonElement;
 const dataTableElement = document.getElementById('dataTable') as HTMLTableElement;
@@ -22,14 +24,17 @@ generateButton.addEventListener('click', async () => {
 
   const allegroData = await processAllegroFile(suffix);
   const empikData = await processEmpikFile(suffix);
+  const shopifyData = await processShopifyFile(suffix);
 
-  if(allegroData === undefined && empikData === undefined) {
+  if(allegroData === undefined && empikData === undefined && shopifyData === undefined) {
     throw Error('Upload at least one CSV!');
   }
 
   const combinedData: DataTableType[] = [
     ...(allegroData ?? []),
-    ...(empikData ?? [])].sort((a, b) => parseCustomDate(a.date) - parseCustomDate(b.date));
+    ...(empikData ?? []),
+    ...(shopifyData ?? [])
+  ].sort((a, b) => parseCustomDate(a.date) - parseCustomDate(b.date));
 
   dataDisplay.buildTable(dataTableElement, combinedData);
   dataDisplay.showCopyButton(copyButton);
@@ -57,6 +62,16 @@ async function processEmpikFile(suffix: string): Promise<DataTableType[] | undef
 
   const dataTableEmpik = new EmpikDataTableHandler(suffix, data.orders, data.products);
   return dataTableEmpik.matchItemsWithOrders();
+}
+
+async function processShopifyFile(suffix: string): Promise<DataTableType[] | undefined> {
+  if (!uploadInputShopify.files || !uploadInputShopify.files[0]) return;
+  
+  const fileHandlerShopify = new FileHandler(uploadInputShopify.files[0], SalePlatform.SHOPIFY);
+  const data = await fileHandlerShopify.getParsedData();
+  
+  const dataTableShopify = new ShopifyDataTableHandler(suffix, data.orders, data.products);
+  return dataTableShopify.matchItemsWithOrders();
 }
 
 function parseCustomDate(dateString: string): number {

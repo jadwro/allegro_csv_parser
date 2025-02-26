@@ -1,10 +1,10 @@
 // OrderCSVHandler3.ts
 import Papa from "papaparse";
 import { OrderType } from "../types/OrderType";
-import { EmpikHeaderMap, EmpikOrderTypeCSV } from "./types/EmpikOrderTypeCSV";
+import { ShopifyHeaderMap, ShopifyOrderTypeCSV } from "./types/ShopifyOrderTypeCSV";
 import { ProductType } from "../types/ProductType";
 
-export default class EmpikOrdersCSVHandler {
+export default class ShopifyOrdersCSVHandler {
   private orders: OrderType[] = [];
   private products: ProductType[] = [];
 
@@ -25,16 +25,16 @@ export default class EmpikOrdersCSVHandler {
   async parseOrdersCSV(data: string) {
     this.orders = await new Promise((resolve, reject) => {
       Papa.parse(data, {
-        delimiter: ';',
+        delimiter: ',',
         header: true,
         skipEmptyLines: true,
         transformHeader: (header: string) => {
-          return EmpikHeaderMap[header] || header;
+          return ShopifyHeaderMap[header] || header;
         },
         complete: (results: any) => {
-          const data = results.data as EmpikOrderTypeCSV[];
+          const data = results.data as ShopifyOrderTypeCSV[];
           const parsedOrders = data
-            .map(this.mapOrdersCSV)
+            .map(this.mapOrdersCSV.bind(this))
             .filter(Boolean) as OrderType[];
           resolve(parsedOrders);
         },
@@ -46,16 +46,16 @@ export default class EmpikOrdersCSVHandler {
   async parseProductsCSV(data: string) {
     this.products = await new Promise((resolve, reject) => {
       Papa.parse(data, {
-        delimiter: ';',
+        delimiter: ',',
         header: true,
         skipEmptyLines: true,
         transformHeader: (header: string) => {
-          return EmpikHeaderMap[header] || header;
+          return ShopifyHeaderMap[header] || header;
         },
         complete: (results: any) => {
-          const data = results.data as EmpikOrderTypeCSV[];
+          const data = results.data as ShopifyOrderTypeCSV[];
           const parsedProducts = data
-            .map(this.mapProductsCSV)
+            .map(this.mapProductsCSV.bind(this))
             .filter(Boolean) as ProductType[];
           resolve(parsedProducts);
         },
@@ -64,42 +64,50 @@ export default class EmpikOrdersCSVHandler {
     });
   }
 
-  private mapOrdersCSV(data: EmpikOrderTypeCSV): OrderType | null {
-    if (data.Status.toLowerCase() === "anulowane") {
+  private mapOrdersCSV(data: ShopifyOrderTypeCSV): OrderType | null {
+    if (this.shouldNotBeProceeded(data)) {
       return null;
     }
+
     return {
-      orderId: data.OrderId,
-      orderDate: data.OrderDate,
+      orderId: data.Name,
+      orderDate: data.FulfilledAt,
       buyerData: {
-        buyerName: `${data.BuyerFirstName} ${data.BuyerLastName}`.trim(),
+        buyerName: `${data.BillingName}`.trim(),
         buyerAddress: {
-          buyerStreet: data.BuyerStreet,
-          buyerZip: data.BuyerZip,
-          buyerCity: data.BuyerCity,
+          buyerStreet: data.BillingAddress1,
+          buyerZip: data.BillingZip,
+          buyerCity: data.BillingCity,
           buyerCountry: ""
         }
       },
       paymentData: {
-        paymentId: "",
-        paymentAmount: parseFloat(data.TotalOrderAmountWithoutTax) || 0,
+        paymentId: data.PaymentID,
+        paymentAmount: parseFloat(data.Total) || 0,
         paymentCurrency: "PLN"
       },
-      invoiceIssued: data.BuyerTaxNumber !== '', // TODO?
-      shippingCost: data.TotalShippingAmount
+      invoiceIssued: false, // TODO?
+      shippingCost: data.Shipping
     };
   }
 
-  private mapProductsCSV(data: EmpikOrderTypeCSV): ProductType | null {
-    if (data.Status.toLowerCase() === "anulowane") {
+  private mapProductsCSV(data: ShopifyOrderTypeCSV): ProductType | null {
+    if (this.shouldNotBeProceeded(data)) {
       return null;
     }
+
     return {
-      orderId: data.OrderId,
-      productName: data.ProductName,
-      quantity: +data.Quantity,
-      price: +data.TotalOrderAmountWithVAT,
-      returnsQuantity: 0 // TODO?
+      orderId: data.Name,
+      productName: data.LineitemName,
+      quantity: +data.LineitemQuantity,
+      price: +data.LineitemPrice,
+      returnsQuantity: 0
     }
+  }
+
+  private shouldNotBeProceeded(data: ShopifyOrderTypeCSV) {
+    return data.FulfillmentStatus.toLowerCase() === "unfulfilled" 
+      || data.FinancialStatus.toLowerCase() === "voided"
+      || data.FinancialStatus.toLowerCase() === "refunded";
   }
 }

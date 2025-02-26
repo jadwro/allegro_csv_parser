@@ -1,6 +1,7 @@
 import { ParsedData } from './types/ParsedData';
 import { AllegroFileHandler } from './Allegro/AllegroFileHandlers';
 import { EmpikFileHandler } from './Empik/EmpikFileHandler';
+import { ShopifyFileHandler } from './Shopify/ShopifyFileHandler'
 import { SalePlatform } from './types/SalePlatform';
 
 export class FileHandler {
@@ -28,6 +29,9 @@ export class FileHandler {
         break;
       case SalePlatform.EMPIK:
         this.parsedData = await new EmpikFileHandler(fileContent).processFile();
+        break;
+      case SalePlatform.SHOPIFY:
+        this.parsedData = await new ShopifyFileHandler(fileContent).processFile();
         break;
       default:
         throw Error(`***** ${salePlatform} sale platform doesn't exist! *****`);

@@ -4,7 +4,7 @@ import { DataTableType } from '../types/DataTableType';
 import { VAT_RATE } from "../Consts";
 import { SalePlatform } from "../types/SalePlatform";
 
-export class EmpikDataTableHandler {  
+export class ShopifyDataTableHandler {  
   private dataTable: DataTableType[] = [];
   
   constructor(private suffix: string, private orders: OrderType[], private products: ProductType[]) {
@@ -18,8 +18,9 @@ export class EmpikDataTableHandler {
 
   matchItemsWithOrders() {
     return this.orders
-      .filter(order => !order.invoiceIssued)
-      .filter((order, index, self) => index === self.findIndex(o => o.orderId === order.orderId))    
+      .filter((order, index, self) => index === self.findIndex(o => o.orderId === order.orderId))
+      .filter(order => order.paymentData.paymentAmount !== 0)
+      .reverse()
       .map((order, index) => {        
         const products = this.products.filter(product => product.orderId === order.orderId);
         const shippingCost = this.calculateShipping(order, products);
@@ -37,18 +38,23 @@ export class EmpikDataTableHandler {
           grossValue: amounts.grossAmount.toString().replace('.',','),
           vatRate: VAT_RATE.toString().replace('.',','),
           transactionId: order.paymentData.paymentId,
-          platform: SalePlatform.EMPIK
+          platform: SalePlatform.SHOPIFY
         }
     });
   }
 
-  private formatDate(stringDate: string): string {
-    return stringDate.slice(0, 10);
-  }
+  // private formatDate(stringDate: string): string {
+  //   return stringDate.slice(0, 10);
+  // }
   
+  private formatDate(stringDate: string): string {
+    const result = stringDate.slice(0, 10).split('-');
+    const [year, month, day] = result;
+    return `${day}.${month}.${year}`;
+  }
 
   private generateId(index: number) {
-    return `${index}_em/${this.suffix}`;
+    return `${index}_sh/${this.suffix}`;
   }
 
   private createProductsList(products: ProductType[]) {

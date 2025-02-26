@@ -17,6 +17,7 @@ export type EmpikOrderTypeCSV = {
   BuyerStreet: string;
   BuyerZip: string;
   BuyerCity: string;
+  BuyerTaxNumber: string;
 };
 
 export const EmpikHeaderMap: Record<string, string> = {
@@ -33,9 +34,10 @@ export const EmpikHeaderMap: Record<string, string> = {
   "Łączna kwota za zamówienie z podatkiem VAT (z opłatami za wysyłkę)": "TotalOrderAmountWithVAT",
   "Kwota przelana na konto sklep (z podatkiem)": "AmountTransferredToShop",
   "Całkowita zwrócona kwota (w tym podatki)": "TotalRefundedAmount",
-  "Adres do wysyłki: imię": "BuyerFirstName",
-  "Adres do wysyłki: nazwisko": "BuyerLastName",
-  "Adres do wysyłki: ulica 1": "BuyerStreet",
-  "Adres do wysyłki: kod pocztowy": "BuyerZip",
-  "Adres do wysyłki: miejscowość": "BuyerCity"
+  "Adres do faktury: imię": "BuyerFirstName",
+  "Adres do faktury: nazwisko": "BuyerLastName",
+  "Adres do faktury: ulica 1": "BuyerStreet",
+  "Adres do faktury: kod pocztowy": "BuyerZip",
+  "Adres do faktury: miejscowość": "BuyerCity",
+  "NIP klienta": "BuyerTaxNumber"
 };
