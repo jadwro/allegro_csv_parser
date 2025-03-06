@@ -23,4 +23,5 @@ export type AllegroOrderTypeCSV = {
   TotalToPayAmount: string;
   InvoiceTaxId: string;
   Marketplace: string;
+  TotalToPayCurrency: string;
 };

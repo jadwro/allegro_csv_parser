@@ -40,7 +40,7 @@ export default class AllegroOrderCSVHandler {
       paymentData: {
         paymentId: data.PaymentId,
         paymentAmount: +data.TotalToPayAmount,
-        paymentCurrency: data.PaymentCurrency
+        paymentCurrency: data.TotalToPayCurrency
       },
       invoiceIssued: data.InvoiceTaxId !== ''
     }  
