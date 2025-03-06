@@ -81,7 +81,7 @@ export default class EmpikOrdersCSVHandler {
         }
       },
       paymentData: {
-        paymentId: "",
+        paymentId: data.OrderId,
         paymentAmount: parseFloat(data.TotalOrderAmountWithoutTax) || 0,
         paymentCurrency: "PLN"
       },
