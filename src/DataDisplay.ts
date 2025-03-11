@@ -47,17 +47,20 @@ export class DataDisplay {
     const totalCell = totalRow.insertCell();
     totalCell.colSpan = 6;
     totalCell.style.fontWeight = 'bold';
-    totalCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2', 'text-center');
     totalCell.textContent = 'Total:';
   
     const totalNet = totalRow.insertCell();
-    totalNet.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalNet.style.fontWeight = 'bold';
+    totalNet.classList.add('border', 'border-gray-300', 'px-4', 'py-2', 'text-center');
     totalNet.textContent = this.#totalNetValue.toFixed(2);
     const totalVat = totalRow.insertCell();
-    totalVat.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalVat.style.fontWeight = 'bold';
+    totalVat.classList.add('border', 'border-gray-300', 'px-4', 'py-2', 'text-center');
     totalVat.textContent = this.#totalVatValue.toFixed(2);
     const totalGross = totalRow.insertCell();
-    totalGross.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalGross.style.fontWeight = 'bold';
+    totalGross.classList.add('border', 'border-gray-300', 'px-4', 'py-2', 'text-center');
     totalGross.textContent = this.#totalGrossValue.toFixed(2);
   
     const emptyCell = totalRow.insertCell();
