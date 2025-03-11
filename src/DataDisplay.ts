@@ -1,6 +1,10 @@
 import { DataTableType } from "./types/DataTableType";
 
-export class DataDisplay {  
+export class DataDisplay {
+  #totalNetValue: number = 0;
+  #totalVatValue: number = 0;
+  #totalGrossValue: number = 0;
+
   buildTable(dataTableElement: HTMLTableElement, data: DataTableType[]) {
     dataTableElement.innerHTML = '';
     
@@ -35,7 +39,31 @@ export class DataDisplay {
         cell.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
         cell.textContent = row[header as keyof DataTableType] || '';
       });
+      this.calculateTotal(row['netValue'], row['vatAmount'], row['grossValue']);
     });
+
+    const totalRow = dataTableElement.insertRow();
+
+    const totalCell = totalRow.insertCell();
+    totalCell.colSpan = 6;
+    totalCell.style.fontWeight = 'bold';
+    totalCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalCell.textContent = 'Total:';
+  
+    const totalNet = totalRow.insertCell();
+    totalNet.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalNet.textContent = this.#totalNetValue.toFixed(2);
+    const totalVat = totalRow.insertCell();
+    totalVat.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalVat.textContent = this.#totalVatValue.toFixed(2);
+    const totalGross = totalRow.insertCell();
+    totalGross.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    totalGross.textContent = this.#totalGrossValue.toFixed(2);
+  
+    const emptyCell = totalRow.insertCell();
+    emptyCell.colSpan = 3;
+    emptyCell.classList.add('border', 'border-gray-300', 'px-4', 'py-2');
+    emptyCell.textContent = '';
   }
 
   copyContent(tableElement: HTMLTableElement) {
@@ -55,5 +83,11 @@ export class DataDisplay {
 
   showCopyButton(buttonElement: HTMLButtonElement) {
     buttonElement.style.display = 'inline-block';
+  }
+
+  private calculateTotal(net: string, vat: string, gross: string) {
+    this.#totalNetValue += +net.replace(',','.');
+    this.#totalVatValue += +vat.replace(',','.');
+    this.#totalGrossValue += +gross.replace(',','.');
   }
 }
