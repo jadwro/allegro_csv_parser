@@ -71,7 +71,7 @@ export default class ShopifyOrdersCSVHandler {
 
     return {
       orderId: data.Name,
-      orderDate: data.FulfilledAt,
+      orderDate: data.CreatedAt,
       buyerData: {
         buyerName: `${data.BillingName}`.trim(),
         buyerAddress: {
